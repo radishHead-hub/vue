@@ -1,5 +1,5 @@
 <template>
-  <div class="order">
+  <!-- <div class="order">
     <div class="order-card-body" v-for="(order,index) in orderlist" :key="index">
       <div
         class="order-card-wrap"
@@ -28,6 +28,38 @@
         <button class="cardbutton" @click="$router.push('/shop')">再来一单</button>
       </div>
     </div>
+    
+  </div> -->
+   <div class="order">
+    <div class="order-card-body" v-for="(order,index) in orderlist" :key="index">
+      <div
+        class="order-card-wrap"
+        @click="$router.push({name:'orderInfo',params:order})"
+        v-if="order"
+      >
+        <img :src="order.shop.shopImg" alt>
+        <div class="order-card-content">
+          <div class="order-card-head">
+            <div class="title">
+              <a>
+                <span>{{order.shop.shopName}}</span>
+                <i class="fa fa-angle-right"></i>
+              </a>
+              <p>订单已完成</p>
+            </div>
+            <p class="date-time">{{order.arrTime}}</p>
+          </div>
+          <div class="order-card-detail">
+            <p class="detail">{{order.foods[0].foodName}}</p>
+            <p class="price">¥{{order.totalPrice}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="order-card-bottom">
+        <button class="cardbutton" @click="$router.push('/shop')">再来一单</button>
+      </div>
+    </div>
+    
   </div>
 </template>
 
@@ -37,6 +69,17 @@ export default {
   data() {
     return {
       orderlist: []
+      // _id:"",
+      // myAddress_id:"",
+      // arrTime:"",
+      // shop_id:"",
+      // delivery_fee:0,
+      // totalPrice:0,
+      // tableware:"",
+      // remark:"",
+      // selectFoods:[],
+      // myAddress:[],
+      // shop:[]
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -46,10 +89,27 @@ export default {
   },
   methods: {
     getData() {
-      this.$axios(`/api/user/orders/${localStorage.ele_login}`).then(res => {
-        // console.log(res.data);
-        this.orderlist = res.data.orderlist;
+      this.$axios.post('http://localhost:8229/order/selectList',{
+          account_id:localStorage.ele_login
+        }).then(res => {
+        console.log(res.data);
+        this.orderlist = res.data;
+        // _id=res.data._id,
+        // myAddress_id=res.data.myAddress_id,
+        // arrTime=res.data.arrTime,
+        // shop_id=res.data.shop_id,
+        // delivery_fee=res.data.delivery_fee,
+        // totalPrice=res.data.totalPrice,
+        // tableware=res.data.tableware,
+        // remark=res.data.remark,
+        // this.selectFoods = res.data.selectFoods;
+        // this.myAddress = res.data.myAddress;
+        // this.shop = res.data.shop;
       });
+      // this.$axios(`/api/user/orders/${localStorage.ele_login}`).then(res => {
+      //   // console.log(res.data);
+      //   this.orderlist = res.data.orderlist;
+      // });
     }
   }
 };

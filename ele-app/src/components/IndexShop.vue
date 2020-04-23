@@ -1,6 +1,6 @@
 <template>
   <section class="index-container">
-    <div class="index-shopInfo">
+    <div class="index-shopInfo" @click="$router.push('/shop')">
       <!-- 左侧图片 -->
       <div class="logo_container">
         <img :src="restaurant.image_path" alt>
@@ -87,7 +87,7 @@ export default {
   overflow: hidden;
   flex-direction: column;
   padding-left: 2.666667vw;
-  font-size: 0.2rem;
+  font-size: 0.66rem;
   flex-grow: 1;
 }
 .index_shopname {

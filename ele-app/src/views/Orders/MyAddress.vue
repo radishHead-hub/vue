@@ -48,6 +48,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => vm.getData());
+    // next(vm => vm.$forceUpdate());
   },
   methods: {
     addAddress() {
@@ -66,8 +67,9 @@ export default {
         }
       });
     },
-    getData() {
-      this.$axios(`/api/user/user_info/${localStorage.ele_login}`).then(res => {
+    getData() {this.$axios.post('http://localhost:8229/account/findAccountById',{
+          _id:localStorage.ele_login
+        }).then(res => {
         // console.log(res.data);
         this.allAddress = res.data.myAddress;
       });
@@ -83,7 +85,9 @@ export default {
     },
     handleDelete(address, index) {
       this.$axios
-        .delete(`/api/user/address/${localStorage.ele_login}/${address._id}`)
+        .post('http://localhost:8229/myAddress/deleteById',{
+          _id:address._id
+        })
         .then(res => {
           this.allAddress.splice(index, 1);
         });

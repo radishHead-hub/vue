@@ -107,26 +107,41 @@ export default {
     },
     addAddress() {
       this.$axios
+        // .post(
+        //   `/api/user/add_address/${localStorage.ele_login}`,
+        //   this.addressInfo
+        // )
         .post(
-          `/api/user/add_address/${localStorage.ele_login}`,
-          this.addressInfo
-        )
+          'http://localhost:8229/myAddress/add',{
+          account_id:localStorage.ele_login,
+          name:this.addressInfo.name,
+          sex:this.addressInfo.sex,
+          phone:this.addressInfo.phone,
+          address:this.addressInfo.address,
+          bottom:this.addressInfo.bottom,
+          tag:this.addressInfo.tag
+        })
         .then(res => {
           if (!this.$store.getters.userInfo) {
             this.$store.dispatch("setUserInfo", this.addressInfo);
           }
-          this.$router.push("myAddress");
+          this.$router.push("/myAddress");
         })
         .catch(err => console.log(err));
     },
     editAddress() {
       this.$axios
         .post(
-          `/api/user/edit_address/${localStorage.ele_login}/${
-            this.addressInfo._id
-          }`,
-          this.addressInfo
-        )
+          'http://localhost:8229/myAddress/edit',{
+          account_id:localStorage.ele_login,
+          _id:this.addressInfo._id,
+          name:this.addressInfo.name,
+          sex:this.addressInfo.sex,
+          phone:this.addressInfo.phone,
+          address:this.addressInfo.address,
+          bottom:this.addressInfo.bottom,
+          tag:this.addressInfo.tag
+        })
         .then(res => {
           this.$router.push("/myAddress");
         });

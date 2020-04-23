@@ -4,13 +4,13 @@
     <div class="view-body" v-if="orderDetail">
       <div class="status-head">
         <div class="status-text">订单已送达</div>
-        <div class="status-title">感谢您对米修的信任, 期待再次光临</div>
+        <div class="status-title">感谢您对饿度子的信任, 期待再次光临</div>
       </div>
       <div class="restaurant-card">
         <!-- 点餐信息 -->
         <CartGroup
-          v-if="orderDetail.orderInfo"
-          :orderInfo="orderDetail.orderInfo"
+          v-if="orderDetail"
+          :orderInfo="orderDetail"
           :totalPrice="orderDetail.totalPrice"
         />
       </div>
@@ -21,14 +21,14 @@
         <ul class="card-list">
           <li class="list-item">
             <span>送达时间:</span>
-            <div>{{orderDetail.date}}</div>
+            <div>{{orderDetail.arrTime}}</div>
           </li>
           <li class="list-item">
             <span>送货地址:</span>
             <div class="content">
-              <span>{{orderDetail.userInfo.name}}{{orderDetail.userInfo.sex}}</span>
-              <span>{{orderDetail.userInfo.phone}}</span>
-              <span>{{orderDetail.userInfo.address}}{{orderDetail.userInfo.bottom}}</span>
+              <span>{{orderDetail.myAddress.name}}{{orderDetail.myAddress.sex}}</span>
+              <span>{{orderDetail.myAddress.phone}}</span>
+              <span>{{orderDetail.myAddress.address}}{{orderDetail.myAddress.bottom}}</span>
             </div>
           </li>
         </ul>
@@ -48,13 +48,13 @@
           </li>
           <li class="list-item">
             <span>下单时间:</span>
-            {{orderDetail.date}}
+            {{orderDetail.times}}
           </li>
-          <li class="list-item" v-if="orderDetail.remarkInfo">
+          <li class="list-item" v-if="orderDetail">
             <span>订单备注:</span>
             <span class="remark">
-              {{orderDetail.remarkInfo.remark}} \
-              {{orderDetail.remarkInfo.tableware}}
+              {{orderDetail.remark}} \
+              {{orderDetail.tableware}}
             </span>
           </li>
         </ul>

@@ -42,8 +42,10 @@ export default {
       this.$router.push("/login");
     },
     getData() {
-      const user_id = localStorage.ele_login;
-      this.$axios(`/api/user/user_info/${user_id}`).then(res => {
+      const account_id = localStorage.ele_login;
+      this.$axios.post('http://localhost:8229/account/findAccountById',{
+          _id: account_id
+        }).then(res => {
         // console.log(res.data);
         this.userInfo = res.data;
       });
@@ -56,7 +58,7 @@ export default {
       this.$router.push("/login");
     },
     myAddress() {
-      if (this.userInfo.myAddress.length > 0) {
+      if (this.userInfo.myAddress!=null) {
         this.$router.push("/myAddress");
       } else {
         this.$router.push({

@@ -44,7 +44,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.countTimeDown();
-      // vm.addOrder();
+      vm.addOrder();
     });
   },
   computed: {
@@ -94,7 +94,7 @@ export default {
     },
     pay() {
       const data = {
-        body: "米修在线",
+        body: "饿度子",
         out_trade_no: new Date().getTime().toString(),
         total_fee: 1
       };
@@ -127,19 +127,48 @@ export default {
       });
     },
     addOrder() {
-      let orderlist = {
-        orderInfo: this.orderInfo,
-        userInfo: this.userInfo,
-        totalPrice: this.totalPrice,
-        remarkInfo: this.remarkInfo
-      };
+      // let orderlist = {
+      //   orderInfo: this.orderInfo,
+      //   userInfo: this.userInfo,
+      //   totalPrice: this.totalPrice,
+      //   remarkInfo: this.remarkInfo
+      // };
+     var len=this.orderInfo.selectFoods.length
+    //  console.log(len)
+      var arrSelect = [{
+        food_id:"",
+        count:null
+        }];
+      arrSelect=[]
+      for(let i=0;i<len;i++){
+        arrSelect.push({food_id:this.orderInfo.selectFoods[i].category_id , count:this.orderInfo.selectFoods[i].count})
+      }
+      //拿到selectFoods数组的值
+      // let orderlist = {
+        
+      // };
       // console.log(orderlist);
-      this.$axios
-        .post(`/api/user/add_order/${localStorage.ele_login}`, orderlist)
-        .then(res => {
-          // console.log(res.data);
-          this.$router.push("/order");
-        });
+      // this.$router.push("/order");
+      this.$axios.post('http://localhost:8229/order/add',{
+        myAddress_id: this.userInfo._id,
+        shop_id: this.orderInfo.shopInfo.id,
+
+        selectFoods:arrSelect,
+
+        delivery_fee:this.orderInfo.shopInfo.float_delivery_fee,
+        totalPrice: this.totalPrice,
+        remark: this.remarkInfo.remark,
+        tableware: this.remarkInfo.tableware
+        }).then(res => {
+        console.log(res.data);
+            this.$router.push("/order");
+      });
+      // this.$axios
+      //   .post(`/api/user/add_order/${localStorage.ele_login}`, orderlist)
+      //   .then(res => {
+      //     console.log(res.data);
+      //     this.$router.push("/order");
+      //   });
     }
   },
   components: {

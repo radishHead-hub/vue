@@ -38,6 +38,7 @@ export default {
     return {
       phone: "",
       verifyCode: "",
+      vCode:"",
       errors: {},
       btnTitle: "获取验证码",
       disabled: false
@@ -54,16 +55,28 @@ export default {
       // 取消错误提醒
       this.errors = {};
       // 发送请求
-      this.$axios
-        .post("/api/posts/sms_back", {
+      this.$axios.post('http://localhost:8229/account/findAccountLogin', {
           phone: this.phone,
           code: this.verifyCode
         })
         .then(res => {
           // console.log(res.data);
           // 检验成功 设置登录状态并且跳转到/
-          localStorage.setItem("ele_login", res.data.user._id);
-          this.$router.push("/");
+          if(res.data.code=="验证码错误"){
+              this.errors = {
+              code: "验证码错误"
+              };
+              return false;
+          } else if(res.data.code=="验证码已失效，请重新获取"){
+              this.errors = {
+              code: "验证码已失效，请重新获取"
+              };
+              return false;
+          }else{
+              localStorage.setItem("ele_login", res.data._id);
+              this.$router.push("/");
+          }
+          
         })
         .catch(err => {
           // 返回错误信息
@@ -77,11 +90,12 @@ export default {
         this.validateBtn();
         // 发送网络请求
         this.$axios
-          .post("/api/posts/sms_send",{
+          .post('http://localhost:8229/account/findCode',{
             phone:this.phone
           })
           .then(res => {
-            console.log(res);
+            console.log(res.data);
+            // this.vCode = res.data;
           });
       }
     },

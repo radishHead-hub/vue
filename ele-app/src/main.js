@@ -12,7 +12,7 @@ import { Indicator } from 'mint-ui';
 
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
-
+Vue.config.devtools = true
 Vue.use(MintUI);
 
 // axios.defaults.baseURL = 'https://ele-interface.herokuapp.com/';

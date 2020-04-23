@@ -114,14 +114,24 @@ export default {
       });
     },
     getData() {
-      this.$axios(`/api/user/user_info/${localStorage.ele_login}`).then(res => {
-        // console.log(res.data);
-        if (res.data.myAddress.length > 0) {
+      const account_id = localStorage.ele_login;
+      this.$axios.post('http://localhost:8229/account/findAccountById',{
+          _id: account_id
+        }).then(res => {if (res.data.myAddress.length!=null) {
           this.haveAddress = true;
         } else {
           this.haveAddress = false;
         }
+        // console.log(res.data);
       });
+      // this.$axios(`/api/user/user_info/${localStorage.ele_login}`).then(res => {
+        // console.log(res.data);
+        // if (res.data.myAddress.length > 0) {
+        //   this.haveAddress = true;
+        // } else {
+        //   this.haveAddress = false;
+        // }
+      // });
     },
     handlePay() {
       if (!this.userInfo) {
