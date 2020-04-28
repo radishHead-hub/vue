@@ -1,91 +1,78 @@
-<template>
-   <div class="order">
-    <div class="order-card-body" v-for="(order,index) in orderlist" :key="index">
-      <div
-        class="order-card-wrap"
-        @click="$router.push({name:'orderInfo',params:order})"
-        v-if="order"
-      >
-        <img :src="order.shop.shopImg" alt>
+<template> 
+<div class="order">
+    <div class="order-card-body">
+      <div class="order-card-wrap">
+        <img :src="orderDetail.shop.shopImg" alt>
         <div class="order-card-content">
           <div class="order-card-head">
             <div class="title">
               <a>
-                <span>{{order.shop.shopName}}</span>
+                <span>{{orderDetail.shop.shopName}}</span>
                 <i class="fa fa-angle-right"></i>
               </a>
-              <p v-show="order.sure==0">订单未确认收货</p>
-              <p v-show="order.sure==1">订单已完成</p>
             </div>
-            <p class="date-time">{{order.arrTime}}</p>
+            <p class="date-time">{{orderDetail.arrTime}}</p>
           </div>
           <div class="order-card-detail">
-            <p class="detail">{{order.foods[0].foodName}}</p>
-            <p class="price">¥{{order.totalPrice}}</p>
+            <p class="detail">{{orderDetail.foods[0].foodName}}</p>
+            <p class="price">¥{{orderDetail.totalPrice}}</p>
           </div>
+          <div>
+            <Rating :rating="rating"/>
+            <div>
+              <button @click="rating=1"> 1</button>
+              <button @click="rating=2"> 2</button>
+              <button @click="rating=3"> 3</button>
+              <button @click="rating=4"> 4</button>
+              <button @click="rating=5"> 5</button>
+            </div>
+          </div>
+          <mt-field placeholder="您对商家/菜品满意吗?" type="textarea" rows="2" v-model="remarkText"></mt-field>
+           <!-- 确定按钮 -->
+        <div class="order-card-bottom">
+        <button class="cardbutton" @click="handleRemark(rating)">确定</button>
         </div>
       </div>
-      <div class="order-card-bottom">
-        <button class="card3button" v-show="order.sure==0" @click="handleSure(order._id)">确认收货</button>
-        <button class="card2button" v-show="order.sure==1 && order.remarkStatus==0" 
-        @click="$router.push({name:'remarkInfo',params:order})"
-        v-if="order">评价</button>
-        <button class="cardbutton" v-show="order.sure==1" @click="$router.push('/shop')">再来一单</button>
+       
       </div>
     </div>
-    
-  </div>
+</div> 
 </template>
-
 <script>
-import GoEasy from 'goeasy';
-import Vue from 'vue';
+import Rating from "../../components/Rating";
 export default {
-  name: "order",
-  data() {
+    data() {
     return {
-      // flag:0,
-      orderlist: []
-      // _id:"",
-      // myAddress_id:"",
-      // arrTime:"",
-      // shop_id:"",
-      // delivery_fee:0,
-      // totalPrice:0,
-      // tableware:"",
-      // remark:"",
-      // selectFoods:[],
-      // myAddress:[],
-      // shop:[]
+      rating:5,
+      remarkText:null,
+      orderDetail: null
     };
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.getData();
+      vm.orderDetail = to.params;
+      // console.log(vm.orderDetail);
     });
   },
+  components: {
+    Rating
+  },
   methods: {
-    getData() {
-      this.$axios.post('http://192.168.1.7:8229/order/selectList',{
-          account_id:localStorage.ele_login
-        }).then(res => {
-        console.log(res.data);
-        this.orderlist = res.data;
-      });
-    },
-    handleSure(order_id){
-      this.$axios.post('http://192.168.1.7:8229/order/sureOrder',{
+    handleRemark(rating){
+      this.$axios.post('http://192.168.1.7:8229/remark/add',{
           account_id:localStorage.ele_login,
-          _id:order_id //订单id
+          orderList_id:this.orderDetail._id,
+          shop_id:this.orderDetail.shop_id,
+          shop_name:this.orderDetail.shop.shopName,
+          remarkText:this.remarkText,
+          rating:rating
         }).then(res => {
-        this.orderlist = res.data;
+        this.$router.push("/order");
       });
-
     }
   }
-};
+}
 </script>
-
 <style scoped>
 .order {
   width: 100%;

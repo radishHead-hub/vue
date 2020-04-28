@@ -112,7 +112,7 @@ export default {
         //   this.addressInfo
         // )
         .post(
-          'http://localhost:8229/myAddress/add',{
+          'http://192.168.1.7:8229/myAddress/add',{
           account_id:localStorage.ele_login,
           name:this.addressInfo.name,
           sex:this.addressInfo.sex,
@@ -132,7 +132,7 @@ export default {
     editAddress() {
       this.$axios
         .post(
-          'http://localhost:8229/myAddress/edit',{
+          'http://192.168.1.7:8229/myAddress/edit',{
           account_id:localStorage.ele_login,
           _id:this.addressInfo._id,
           name:this.addressInfo.name,

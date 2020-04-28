@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="logo">
-      <img src="../assets/logo.jpg" alt="my login image">
+      <img src="../assets/ele_logo.jpg" alt="my login image">
     </div>
     <!-- 手机号 -->
     <InputGroup
@@ -55,7 +55,7 @@ export default {
       // 取消错误提醒
       this.errors = {};
       // 发送请求
-      this.$axios.post('http://localhost:8229/account/findAccountLogin', {
+      this.$axios.post('http://192.168.1.7:8229/account/findAccountLogin', {
           phone: this.phone,
           code: this.verifyCode
         })
@@ -90,7 +90,7 @@ export default {
         this.validateBtn();
         // 发送网络请求
         this.$axios
-          .post('http://localhost:8229/account/findCode',{
+          .post('http://192.168.1.7:8229/account/findCode',{
             phone:this.phone
           })
           .then(res => {

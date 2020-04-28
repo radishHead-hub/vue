@@ -107,6 +107,12 @@ const router = new Router({
       name: 'orderInfo',
       component: () => import('../views/Orders/OrderInfo.vue')
     }
+    ,
+    {
+      path: '/remarkInfo',
+      name: 'remarkInfo',
+      component: () => import('../views/Orders/RemarkInfo.vue')
+    }
   ]
 });
 // 路由守卫

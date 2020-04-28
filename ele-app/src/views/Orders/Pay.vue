@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import GoEasy from 'goeasy';
+import Vue from 'vue';
 import Header from "../../components/Header";
 import { setInterval, clearInterval } from "timers";
 export default {
@@ -44,7 +46,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.countTimeDown();
-      vm.addOrder();
+      // vm.addOrder();//微信支付成功之后一进来就添加订单信息
     });
   },
   computed: {
@@ -98,7 +100,7 @@ export default {
         out_trade_no: new Date().getTime().toString(),
         total_fee: 1
       };
-      alert("进入到pay方法中");
+      // alert("进入到pay方法中");
       // 请求 http://www.thenewstep.cn/wxzf/example/jsapi.php
       fetch("http://www.thenewstep.cn/wxzf/example/jsapi.php", {
         method: "POST",
@@ -112,7 +114,9 @@ export default {
           this.onBridgeReady(data);
         })
         .catch(err => {
-          alert("请求失败");
+          // alert("请求失败");
+          alert("支付成功");
+          this.addOrder();
         });
     },
     onBridgeReady(data) {
@@ -120,19 +124,13 @@ export default {
         if (res.err_msg == "get_brand_wcpay_request:ok") {
           // 使用以上方式判断前端返回,微信团队郑重提示：
           //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-          // alert("支付成功");
+          alert("支付成功");
           // 生成订单
           this.addOrder();
         }
       });
     },
     addOrder() {
-      // let orderlist = {
-      //   orderInfo: this.orderInfo,
-      //   userInfo: this.userInfo,
-      //   totalPrice: this.totalPrice,
-      //   remarkInfo: this.remarkInfo
-      // };
      var len=this.orderInfo.selectFoods.length
     //  console.log(len)
       var arrSelect = [{
@@ -141,7 +139,7 @@ export default {
         }];
       arrSelect=[]
       for(let i=0;i<len;i++){
-        arrSelect.push({food_id:this.orderInfo.selectFoods[i].category_id , count:this.orderInfo.selectFoods[i].count})
+        arrSelect.push({food_id:this.orderInfo.selectFoods[i].virtual_food_id , count:this.orderInfo.selectFoods[i].count})
       }
       //拿到selectFoods数组的值
       // let orderlist = {
@@ -149,10 +147,11 @@ export default {
       // };
       // console.log(orderlist);
       // this.$router.push("/order");
-      this.$axios.post('http://localhost:8229/order/add',{
+      
+      this.$axios.post('http://192.168.1.7:8229/order/add',{
         myAddress_id: this.userInfo._id,
         shop_id: this.orderInfo.shopInfo.id,
-
+        account_id:localStorage.ele_login,
         selectFoods:arrSelect,
 
         delivery_fee:this.orderInfo.shopInfo.float_delivery_fee,
@@ -160,8 +159,27 @@ export default {
         remark: this.remarkInfo.remark,
         tableware: this.remarkInfo.tableware
         }).then(res => {
+      //创建全局GoEasy对象
+          Vue.prototype.$goEasy = new GoEasy({
+          host:'hangzhou.goeasy.io', //应用所在的区域地址: 【hangzhou.goeasy.io |singapore.goeasy.io】
+          appkey: "BC-421c7bcf59b34c84b48557ce4722c8c7", //替换为您的应用appkey
+          onConnected: function() {
+              console.log('连接成功！')
+          },
+          onDisconnected: function() {
+              console.log('连接断开！')
+          },
+          onConnectFailed: function(error) {
+              console.log('连接失败或错误！')
+          }
+        });
+        var shop_id=this.orderInfo.shopInfo.id;
+        this.$goEasy.publish({
+              channel: "ele"+shop_id, //替换为您自己的channel
+              message: "有用户下单啦~请及时处理" //替换为您想要发送的消息内容
+          });
         console.log(res.data);
-            this.$router.push("/order");
+        this.$router.push("/order");
       });
       // this.$axios
       //   .post(`/api/user/add_order/${localStorage.ele_login}`, orderlist)

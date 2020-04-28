@@ -1,7 +1,9 @@
 module.exports = {
+  // publicPath: '/ele/dist/', // 打包文件相对路径
   devServer: {
     open: true,
-    host: 'localhost',
+      // host: 'localhost',
+    host: '192.168.1.7',
     port: 8080,
     https: false,
     hotOnly: false,

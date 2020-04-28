@@ -5,10 +5,11 @@ import 'mint-ui/lib/style.css';
 import router from './router';
 import store from './store';
 import axios from 'axios';
-import qs from 'qs';
+import GoEasy from 'goeasy';
 
 import { Indicator } from 'mint-ui';
-
+import { Field } from 'mint-ui';
+Vue.component(Field.name, Field);
 
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;

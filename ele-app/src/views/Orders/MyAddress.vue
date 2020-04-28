@@ -67,7 +67,7 @@ export default {
         }
       });
     },
-    getData() {this.$axios.post('http://localhost:8229/account/findAccountById',{
+    getData() {this.$axios.post('http://192.168.1.7:8229/account/findAccountById',{
           _id:localStorage.ele_login
         }).then(res => {
         // console.log(res.data);
@@ -85,7 +85,7 @@ export default {
     },
     handleDelete(address, index) {
       this.$axios
-        .post('http://localhost:8229/myAddress/deleteById',{
+        .post('http://192.168.1.7:8229/myAddress/deleteById',{
           _id:address._id
         })
         .then(res => {

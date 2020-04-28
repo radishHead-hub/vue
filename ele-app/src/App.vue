@@ -7,12 +7,38 @@
 </template>
 
 <script>
+import GoEasy from 'goeasy';
+import Vue from 'vue';
 export default {
   name: "app",
   created() {
+     //创建全局GoEasy对象
+      Vue.prototype.$goEasy = new GoEasy({
+          host:'hangzhou.goeasy.io', //应用所在的区域地址: 【hangzhou.goeasy.io |singapore.goeasy.io】
+          appkey: "BC-421c7bcf59b34c84b48557ce4722c8c7", //替换为您的应用appkey
+          onConnected: function() {
+              console.log('连接成功！')
+          },
+          onDisconnected: function() {
+              console.log('连接断开！')
+          },
+          onConnectFailed: function(error) {
+              console.log('连接失败或错误！')
+          }
+      });
+    var id=localStorage.ele_login;
+     this.$goEasy.subscribe({
+    channel: "ele"+id, //替换为您自己的channel
+    onMessage: function (message) {
+        alert(message.content);
+    }
+    });
     this.getLocation();
+   
+
   },
   methods: {
+    
     getLocation() {
       const self = this;
       AMap.plugin("AMap.Geolocation", function() {

@@ -43,7 +43,7 @@ export default {
     },
     getData() {
       const account_id = localStorage.ele_login;
-      this.$axios.post('http://localhost:8229/account/findAccountById',{
+      this.$axios.post('http://192.168.1.7:8229/account/findAccountById',{
           _id: account_id
         }).then(res => {
         // console.log(res.data);
